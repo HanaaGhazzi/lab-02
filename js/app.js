@@ -8,18 +8,12 @@ let data = $.ajax('data/page-1.json')
 
         data.forEach((element) => {
             let newGallary = new Gallary(element);
-            // if (!optionList.includes(element.keyword)) {
-            //     optionList.push(element.keyword)
-            // }
-
             newGallary.render();
-
         })
-        $('#photo-template').first().remove();
+
         $('#option').first().remove();
+        $('#photo-template').first().remove();
         renderOption();
-
-
     })
 
 let gallaries = [];
@@ -35,9 +29,6 @@ function Gallary(data) {
 }
 $('button').on('click', function () {
 
-
-    // let onClick2 = $('#page2').on('click', onClick);
-
     if (this.id === 'page2') {
 
         optionList = [];
@@ -52,8 +43,6 @@ $('button').on('click', function () {
                     page2Gallary.page2Render();
 
                 })
-
-                $('#photo-template').first().remove();
                 $('#option').first().remove();
                 renderOption();
                 console.log(optionList);
@@ -61,29 +50,27 @@ $('button').on('click', function () {
 
             })
     } else if (this.id === 'page1') {
-        
-        // $(".page2Empty").hide();
-        // $('main').empty();
+
+
         gallaries = [];
         optionList = [];
-        // }         
-        $('main').empty();
+
+        $('#photo-template').hide();
         $('#keywordList').empty();
         $.ajax('data/page-1.json')
             .then(data3 => {
 
                 data3.forEach((element3) => {
                     let newGallary3 = new Gallary(element3);
-                    // if (!optionList.includes(element.keyword)) {
-                    //     optionList.push(element.keyword)
 
-                    newGallary3.renderPage1();
+
+                    newGallary3.render();
+
 
                 })
-                // $('#photo-template').first().remove();
-                // $('#option').first().remove();
+
                 renderOption();
-                
+
                 console.log(gallaries);
 
             })
@@ -93,7 +80,7 @@ $('button').on('click', function () {
 
 Gallary.prototype.render = function () {
 
-    //.. clonning ! 
+
     let photoCard = $('#photo-template').first().clone();
     photoCard.attr('class', this.keyword);
 
@@ -101,27 +88,11 @@ Gallary.prototype.render = function () {
     photoCard.find('#imgUrl').attr('src', this.image_url);
     photoCard.find('#imgDesc').text(this.description);
     $("main").append(photoCard);
+    // photoCard.remove('photo-template');
+    // $('#photo-template').first().remove();
 
-    // console.log(source);
-
-}
-Gallary.prototype.renderPage1 = function () {
-
-    //.. clonning ! 
-    let photoCard = $('#photo-template').first().clone();
-    photoCard.attr('class', this.keyword);
-
-    photoCard.find('#imgTitle').text(this.title);
-    photoCard.find('#imgUrl').attr('src', this.image_url);
-    photoCard.find('#imgDesc').text(this.description);
-    $("main").append(photoCard);
-
-    // console.log(source);
 
 }
-
-// Gallary.renderOption();
-
 
 function renderOption() {
 
@@ -145,20 +116,7 @@ function renderOption() {
 console.log(optionList);
 
 
-function renderDropDown() {
-    console.log('hi from the function');
 
-    optionList.forEach(item => {
-        let optionItem = $('#option').first().clone();
-        optionItem.attr('value', item)
-        optionItem.text(item);
-        console.log(optionItem);
-
-        $('#keywordList').append(optionItem);
-    })
-
-}
-renderDropDown();
 
 $('#keywordList').on('change', function () {
     console.log(this.value);
@@ -189,3 +147,44 @@ Gallary.prototype.page2Render = function () {
     return pageHtml;
 }
 
+$('#sortHorn').click(function () {
+
+    sortByHorns();
+    gallaries.forEach(element => {
+        element.render();
+    });
+});
+
+$('#sortTitle').click(function () {
+    sortByTitle();
+
+    gallaries.forEach(element => {
+        element.render();
+    });
+});
+
+function sortByTitle() {
+    gallaries.sort((a, b) => {
+        if (a.title.toUpperCase() > b.title.toUpperCase()) {
+            return 1;
+        } else if (a.title.toUpperCase() < b.title.toUpperCase()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
+
+}
+
+function sortByHorns() {
+    gallaries.sort((a, b) => {
+        if (a.horns > b.horns) {
+            return 1;
+        } else if (a.horns < b.horns) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
+
+}

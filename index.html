@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="css/modules.css">
   <script id='page2-template' type="text/x-tmpl-mustache">
 
-      <section class = "page2Empty" id ="photo-template" >
+      <section class = "{{{keyword}}}" id ="photo-template" >
         <h2 id="imgTitle">{{title}}</h2>
         <img id="imgUrl" src="{{{image_url}}}" alt="">
         <p id="imgDesc">{{description}}</p>
@@ -28,11 +28,12 @@
     <select id="keywordList">
       <option value="" id="option">Filter by Keyword</option>
     </select>
-    <select name="" id="sortList">
-      <option value="" id='sortBy'>title</option>
-      <option value="" id='sortBy'>keyword</option>
-      <option value="" id='sortBy'>#horns</option>
-    </select>
+  
+      <button value="soTitle" id='sortTitle'>title</button>
+      
+      <button value="sortHorn" id='sortHorn'>#horns</button>
+      
+    
 
     <button id="page1">Page 1</button>
     <button id="page2">Page 2</button>
