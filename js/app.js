@@ -2,19 +2,14 @@
 // create gallary 
 
 var optionList = [];
+//..  load default page 
+$(document).ready(function(){
+    getPage(1);
+})
 
-let data = $.ajax('data/page-1.json')
-    .then(data => {
-
-        data.forEach((element) => {
-            let newGallary = new Gallary(element);
-            newGallary.render();
-        })
-
-        $('#option').first().remove();
-        $('#photo-template').first().remove();
-        renderOption();
-    })
+// $(() =>{
+//     getPage(1);
+// });
 
 let gallaries = [];
 
@@ -27,17 +22,27 @@ function Gallary(data) {
     gallaries.push(this);
 
 }
-$('button').on('click', function () {
 
-    if (this.id === 'page2') {
+
+$('#1').on('click', function () {
+        let idNo = this.id;
+    getPage(idNo);
+
+});
+
+$('#2').on('click', function () {
+    getPage(2);
+
+});
+
+function getPage (page){
 
         optionList = [];
         gallaries = [];
         $("main").empty();
         $('#keywordList').empty();
-        $.ajax('data/page-2.json')
+        $.ajax(`data/page-${page}.json`)
             .then(data2 => {
-                // console.log(data2)
                 data2.forEach((element2) => {
                     let page2Gallary = new Gallary(element2);
                     page2Gallary.page2Render();
@@ -49,34 +54,7 @@ $('button').on('click', function () {
 
 
             })
-    } else if (this.id === 'page1') {
-
-
-        gallaries = [];
-        optionList = [];
-
-        $('#photo-template').hide();
-        $('#keywordList').empty();
-        $.ajax('data/page-1.json')
-            .then(data3 => {
-
-                data3.forEach((element3) => {
-                    let newGallary3 = new Gallary(element3);
-
-
-                    newGallary3.render();
-
-
-                })
-
-                renderOption();
-
-                console.log(gallaries);
-
-            })
     }
-});
-
 
 Gallary.prototype.render = function () {
 
@@ -88,10 +66,8 @@ Gallary.prototype.render = function () {
     photoCard.find('#imgUrl').attr('src', this.image_url);
     photoCard.find('#imgDesc').text(this.description);
     $("main").append(photoCard);
-    // photoCard.remove('photo-template');
-    // $('#photo-template').first().remove();
-
-
+    photoCard.remove('photo-template');
+    $('#photo-template').first().remove();
 }
 
 function renderOption() {
@@ -107,16 +83,9 @@ function renderOption() {
         let optionTag = ` <option value="${item}" id="option">${item}</option>`;
         $('#keywordList').append(optionTag);
 
-        console.log(optionTag);
-
     })
 
 }
-
-console.log(optionList);
-
-
-
 
 $('#keywordList').on('change', function () {
     console.log(this.value);
@@ -133,8 +102,6 @@ $('#keywordList').on('change', function () {
 });
 
 
-
-
 Gallary.prototype.page2Render = function () {
 
 
@@ -145,46 +112,33 @@ Gallary.prototype.page2Render = function () {
     console.log(pageHtml);
 
     return pageHtml;
-}
+};
+
 
 $('#sortHorn').click(function () {
 
-    sortByHorns();
+    sortAlgorithm(gallaries , 'horns');
     gallaries.forEach(element => {
         element.render();
     });
 });
 
 $('#sortTitle').click(function () {
-    sortByTitle();
+    sortAlgorithm(gallaries , 'title');
 
     gallaries.forEach(element => {
         element.render();
     });
 });
 
-function sortByTitle() {
-    gallaries.sort((a, b) => {
-        if (a.title.toUpperCase() > b.title.toUpperCase()) {
-            return 1;
-        } else if (a.title.toUpperCase() < b.title.toUpperCase()) {
-            return -1;
-        } else {
-            return 0;
-        }
+function sortAlgorithm(array , proparty){
+
+    array.sort((a, b) =>{
+            let partA = a[proparty];
+            let partB = b[proparty];
+            if(partA > partB){return 1}
+            else if(partA < partB){return -1}
+            else return 0;
+
     });
-
-}
-
-function sortByHorns() {
-    gallaries.sort((a, b) => {
-        if (a.horns > b.horns) {
-            return 1;
-        } else if (a.horns < b.horns) {
-            return -1;
-        } else {
-            return 0;
-        }
-    });
-
-}
+};
